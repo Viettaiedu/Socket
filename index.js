@@ -35,7 +35,7 @@ const removeUser = (socketId) => {
   users = users.filter((user) => user.socketId !== socketId);
 };
 
-let getUser = (receiverId) => {
+const getUser = (receiverId) => {
   return users.find((user) => user.userId === receiverId);
 };
 io.on("connection", (socket) => {
@@ -45,13 +45,16 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
   // Send message and ge message
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text ,conversationId   } ) => {
     const user = getUser(receiverId);
     user &&
       io.to(user.socketId).emit("getMessage", {
         senderId,
         text,
+        receiverId,
+        conversationId,
       });
+     
   });
   socket.on("disconnect", () => {
     console.log("a user disconnected");
