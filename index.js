@@ -24,8 +24,10 @@ const io = require("socket.io")(http, {
       origin: "http://localhost:3000",
     }
 })
+
 app.get('/', function(req, res) {
   res.status(200).json({status: 'socket server is running...'});
+  res.end();
 });
 
 let users = [];
@@ -67,6 +69,8 @@ io.on("connection", (socket) => {
 });
 
 
-http.listen(PORT , () => {
-  console.log("Listening on port " + PORT);
-})
+
+
+http.listen(process.env.PORT || 9111, function() {
+  console.log('listening on *:9111');
+});
