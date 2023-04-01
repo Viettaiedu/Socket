@@ -54,7 +54,6 @@ io.on("connection", (socket) => {
         receiverId,
         conversationId,
       });
-     
   });
   socket.on("disconnect", () => {
     console.log("a user disconnected");
