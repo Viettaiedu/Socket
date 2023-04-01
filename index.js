@@ -1,6 +1,6 @@
 require("dotenv").config();
-const app = require("express")();
-const http = require("http").Server(app);
+const app = require('express')();
+const http = require('http').Server(app);
 const PORT = process.env.PORT || 9111;
 // app.use(function (req, res, next) {
 //     // Website you wish to allow to connect
@@ -17,11 +17,15 @@ const PORT = process.env.PORT || 9111;
 //     // res.setHeader('Content-Type', 'application/json; charset=utf-8');
 //     next();
 //   });
-const io = require("socket.io")(PORT, {
-  cors: {
-    origin: "http://localhost:3000",
-    credential: true,
-  },
+
+
+const io = require("socket.io")(http, {
+    cors: {
+      origin: "http://localhost:3000",
+    }
+})
+app.get('/', function(req, res) {
+  res.status(200).json({status: 'socket server is running...'});
 });
 
 let users = [];
@@ -61,3 +65,8 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 });
+
+
+http.listen(PORT , () => {
+  console.log("Listening on port " + PORT);
+})
