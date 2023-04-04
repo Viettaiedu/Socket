@@ -24,25 +24,20 @@ const io = require("socket.io")(http, {
       origin: "http://localhost:3000",
     }
 })
-
 app.get('/', function(req, res) {
   res.status(200).json({status: 'socket server is running...'});
   res.end();
 });
-
 let users = [];
-
 const addUser = (userId, socketId) => {
   !users.some((user) => user.userId === userId) &&
     users.push({ userId, socketId });
 };
-
 const removeUser = (socketId) => {
   users = users.filter((user) => user.socketId !== socketId);
 };
-
 const getUser = (receiverId) => {
-  return users.find((user) => user.userId === receiverId);
+  return users.find((user) => user.userId === parseInt(receiverId));
 };
 io.on("connection", (socket) => {
   console.log("a user connected");
@@ -61,6 +56,12 @@ io.on("connection", (socket) => {
         conversationId,
       });
   });
+  // Send suggest friend
+  socket.on('sendSuggestFriend', ({senderUserId,receiverUserId}) => {
+    const user = getUser(receiverUserId);
+    user && 
+      io.to(user.socketId).emit('getSuggestFriend', {senderUserId,receiverUserId})
+  })
   socket.on("disconnect", () => {
     console.log("a user disconnected");
     removeUser(socket.id);
