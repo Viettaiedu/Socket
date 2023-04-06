@@ -1,6 +1,6 @@
 require("dotenv").config();
-const app = require('express')();
-const http = require('http').Server(app);
+const app = require("express")();
+const http = require("http").Server(app);
 const PORT = process.env.PORT || 9111;
 // app.use(function (req, res, next) {
 //     // Website you wish to allow to connect
@@ -18,14 +18,13 @@ const PORT = process.env.PORT || 9111;
 //     next();
 //   });
 
-
 const io = require("socket.io")(http, {
-    cors: {
-      origin: "http://localhost:3000",
-    }
-})
-app.get('/', function(req, res) {
-  res.status(200).json({status: 'socket server is running...'});
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+app.get("/", function (req, res) {
+  res.status(200).json({ status: "socket server is running..." });
   res.end();
 });
 let users = [];
@@ -46,7 +45,7 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
   // Send message and ge message
-  socket.on("sendMessage", ({ senderId, receiverId, text ,conversationId   } ) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text, conversationId }) => {
     const user = getUser(receiverId);
     user &&
       io.to(user.socketId).emit("getMessage", {
@@ -57,11 +56,28 @@ io.on("connection", (socket) => {
       });
   });
   // Send suggest friend
-  socket.on('sendSuggestFriend', ({senderUserId,receiverUserId}) => {
-    const user = getUser(receiverUserId);
-    user && 
-      io.to(user.socketId).emit('getSuggestFriend', {senderUserId,receiverUserId})
-  })
+  socket.on("sendSuggestFriend", ({ senderId, receiverId }) => {
+    const user = getUser(receiverId);
+    user &&
+      io.to(user.socketId).emit("getSuggestFriend", { senderId, receiverId });
+  });
+
+  // confirm suggest friend
+
+  socket.on("sendConfirmAddFriend", ({ senderId, receiverId }) => {
+    const user = getUser(receiverId);
+    user &&
+      io
+        .to(user.socketId)
+        .emit("getConfirmAddFriend", { senderId, receiverId });
+  });
+  // send like
+  socket.on("sendLike", (values) => {
+    const user = getUser(values.receiverId);
+    user &&
+      io.to(user.socketId).emit("getLike", values);
+  });
+
   socket.on("disconnect", () => {
     console.log("a user disconnected");
     removeUser(socket.id);
@@ -69,9 +85,6 @@ io.on("connection", (socket) => {
   });
 });
 
-
-
-
-http.listen(process.env.PORT || 9111, function() {
-  console.log('listening on *:9111');
+http.listen(process.env.PORT || 9111, function () {
+  console.log("listening on *:9111");
 });
