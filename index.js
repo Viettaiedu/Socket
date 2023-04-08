@@ -4,8 +4,7 @@ const http = require("http").Server(app);
 const PORT = process.env.PORT || 9111;
 const cors = require("cors");
 app.use(function (req, res, next) {
-
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "https://client-fb.vercel.app");
 
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -22,13 +21,15 @@ app.use(function (req, res, next) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   next();
 });
-app.use(cors({
-  origin:'http://localhost:3000',
-  credentials :true
-}));
+app.use(
+  cors({
+    origin: "https://client-fb.vercel.app",
+    credentials: true,
+  })
+);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://client-fb.vercel.app",
   },
 });
 app.get("/", function (req, res) {
@@ -82,8 +83,7 @@ io.on("connection", (socket) => {
   // send like
   socket.on("sendLike", (values) => {
     const user = getUser(values.receiverId);
-    user &&
-      io.to(user.socketId).emit("getLike", values);
+    user && io.to(user.socketId).emit("getLike", values);
   });
 
   socket.on("disconnect", () => {
