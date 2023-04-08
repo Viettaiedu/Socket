@@ -2,22 +2,30 @@ require("dotenv").config();
 const app = require("express")();
 const http = require("http").Server(app);
 const PORT = process.env.PORT || 9111;
-// app.use(function (req, res, next) {
-//     // Website you wish to allow to connect
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-//     // Request methods you wish to allow
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+const cors = require("cors");
+app.use(function (req, res, next) {
 
-//     // Request headers you wish to allow
-//     res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Request-With');
-//     // Set to true if you need the website to include cookies in the requests sent
-//     // to the API (e.g. in case you use sessions)
-//     res.header('Access-Control-Allow-Credentials', true);
-//     // Pass to next layer of middleware
-//     // res.setHeader('Content-Type', 'application/json; charset=utf-8');
-//     next();
-//   });
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, Content-Type, Accept, Authorization, X-Request-With"
+  );
+
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  next();
+});
+app.use(cors({
+  origin:'http://localhost:3000',
+  credentials :true
+}));
 const io = require("socket.io")(http, {
   cors: {
     origin: "http://localhost:3000",
