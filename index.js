@@ -4,7 +4,7 @@ const http = require("http").Server(app);
 const PORT = process.env.PORT || 9111;
 const cors = require("cors");
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "https://client-fb.vercel.app");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -23,13 +23,14 @@ app.use(function (req, res, next) {
 });
 app.use(
   cors({
-    origin: "https://client-fb.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://client-fb.vercel.app",
+    origin: "http://localhost:3000",
+    preflightContinue : true
   },
 });
 app.get("/", function (req, res) {
