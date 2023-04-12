@@ -3,19 +3,17 @@ const app = require("express")();
 const http = require("http").Server(app);
 const PORT = process.env.PORT || 9111;
 const cors = require("cors");
+// update
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
-
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
   );
-
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, Content-Type, Accept, Authorization, X-Request-With"
   );
-
   res.setHeader("Access-Control-Allow-Credentials", true);
 
   res.setHeader("Content-Type", "application/json; charset=utf-8");
