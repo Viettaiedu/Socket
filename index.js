@@ -4,7 +4,7 @@ const http = require("http").Server(app);
 const PORT = process.env.PORT || 9111;
 const cors = require("cors");
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL);
 
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -21,15 +21,10 @@ app.use(function (req, res, next) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   next();
 });
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
     preflightContinue : true
   },
 });
