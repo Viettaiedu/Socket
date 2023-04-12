@@ -21,11 +21,16 @@ app.use(function (req, res, next) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   next();
 });
-
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 const io = require("socket.io")(http, {
   cors: {
     origin: process.env.CLIENT_URL,
-    preflightContinue : true
+    preflightContinue: true,
   },
 });
 app.get("/", function (req, res) {
