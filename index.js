@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 9111;
 const cors = require("cors");
 // update
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin",process.env.CLIENT_URL);
+  res.setHeader("Access-Control-Allow-Origin",'https://client-fb.vercel.app/');
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
@@ -21,13 +21,13 @@ app.use(function (req, res, next) {
 });
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: 'https://client-fb.vercel.app/',
     credentials: true,
   })
 );
 const io = require("socket.io")(http, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: 'https://client-fb.vercel.app/',
     preflightContinue: true,
   },
 });
