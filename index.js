@@ -22,7 +22,6 @@ app.use(function (req, res, next) {
 app.use(
   cors({
     origin: '*',
-    credentials: true,
   })
 );
 const io = require("socket.io")(http, {
